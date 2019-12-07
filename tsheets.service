@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve tsheets
+After=network.target
+
+[Service]
+User=siteadmin
+Group=www-data
+WorkingDirectory=/home/siteadmin/tsheets
+Environment="PATH=/home/siteadmin/tsheets/venv/bin"
+ExecStart=/home/siteadmin/tsheets/venv/bin/gunicorn --workers 3 --bind unix:tsheets.sock -m 007 wsgi:app
+
+[Install]
+WantedBy=multi-user.target

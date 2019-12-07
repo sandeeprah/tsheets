@@ -1,0 +1,9 @@
+server {
+    listen 80;
+    server_name swiftspec.com www.swiftspec.com smartconcept.xyz www.smartconcept.xyz;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/siteadmin/tsheets/tsheets.sock;
+    }
+}
