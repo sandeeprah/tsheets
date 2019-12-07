@@ -1,0 +1,60 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}
+{% if title %}{{ title }} - Microblog{% else %}Welcome to Microblog{% endif %}
+{% endblock %}
+
+
+
+{% block navbar %}
+<nav class="navbar navbar-expand-md navbar-dark bg-primary">
+  <a class="navbar-brand font-weight-bold" href="#">Bilfinger</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link font-weight-bold" href="/">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link font-weight-bold" href="#">Timesheet</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav">
+      {% if current_user.is_anonymous %}
+      <li class="nav-item"><a class="nav-link font-weight-bold" href="{{ url_for('login') }}">Login</a></li>
+      {% else %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle font-weight-bold" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ current_user.username }}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item font-weight-bold" href="{{ url_for('user', username=current_user.username) }}">Profile</a>
+          <a class="dropdown-item font-weight-bold" href="{{ url_for('logout') }}">Logout</a>
+        </div>
+      </li>
+      {% endif %}
+
+    </ul>
+  </div>
+</nav>
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+  &nbsp;
+</div>
+<div class="container">
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-info" role="alert">{{ message }}</div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+  {# application content needs to be provided in the app_content block #}
+  {% block app_content %}{% endblock %}
+</div>
+{% endblock %}

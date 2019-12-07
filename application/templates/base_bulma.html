@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+
+<head>
+  {% block head %}
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="cache-control" content="no-cache" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %} {% endblock title %}</title>
+  <meta name="author" content="Sandeep Raheja">
+  <meta name="description" content="{% block meta_description %}{% endblock meta_description %}" />
+  <meta name="keywords" content="{% block meta_keywords %}{% endblock meta_keywords %}" />
+  {% block sharing %}{% endblock sharing %}
+  {% endblock head %}
+
+  {% block css %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css', _external=True) }}">
+  <!--
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bulma.css', _external=True) }}">
+  -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bulma.css', _external=True) }}">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.png', _external=True) }}"/>
+  {% endblock css %}
+  {% block extra_styles %}{% endblock extra_styles %}
+  {% block script_top %}
+  {% endblock script_top %}
+</head>
+
+<body>
+  <div id="app">
+    {% block page_header %}
+    <nav class="navbar is-fixed-top is-info" id="top" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="#">Bilfinger</a>
+        <button class="button navbar-burger is-primary" data-target="navMenu" id='burgerMain'>
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+      </div>
+      <div class="navbar-menu" id="navMenu">
+        <div class="navbar-start">
+          {% block navbar_left %}
+          <a href="/tsheet/" class="navbar-item">Timesheet</a>
+          {% endblock navbar_left %}
+        </div>
+        <div class="navbar-end">
+          {% if current_user.is_anonymous %}
+            <a href="{{ url_for('login') }}" class="navbar-item is-right">Login</a>
+          {% else %}
+            <a href="{{ url_for('user', username=current_user.username) }}" class="navbar-item is-right">Profile</a>
+            <a href="{{ url_for('logout') }}" class="navbar-item is-right">Logout</a>
+          {% endif %}
+        </div>
+        </div>
+      </div>
+    </nav>
+    {% endblock page_header %}
+    {% block messages %}
+    <div class="section hideprint" v-cloak>
+      <div class="container">
+        <div class="columns is-centered">
+          <div class="column is-4">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <article class="message is-info">
+                <div class="message-body">
+                    <ul>
+                      {% for message in messages %}
+                      <li>{{ message }}</li>
+                      {% endfor %}
+                    </ul>
+              </div>
+            </article>
+            {% endif %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% endblock messages %}
+    {% block modals %}
+    {% endblock modals %}
+    {% block pagetitle %}
+    {% endblock pagetitle %}
+    {% block content %}
+    {% endblock content %}
+    {% block disclaimers %}
+    {% endblock disclaimers %}
+    {% block acknowledgements %}
+    {% endblock acknowledgements %}
+    {% block page_footer %}
+    {% endblock page_footer %}
+  </div>
+
+  {% block script_bottom %}
+  {% endblock script_bottom %}
+
+
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Bilfinger Timsheet App{% endblock title %}
+
+{% block meta_description %}
+{% endblock meta_description %}
+
+{% block meta_keywords %}
+{% endblock meta_keywords %}
+
+{% block app_content %}
+<h1>Hi, {{ current_user.username }}!</h1>
+{% for post in posts %}
+<div>
+  <p>{{ post.author.username }} says: <b>{{ post.body }}</b></p>
+</div>
+{% endfor %}
+{% endblock app_content %}
