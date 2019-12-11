@@ -1,7 +1,11 @@
 {% extends 'bootstrap/base.html' %}
 
 {% block title %}
-{% if title %}{{ title }} - Microblog{% else %}Welcome to Microblog{% endif %}
+{% if title %}
+  {{ title }}
+{% else %}
+  Welcome to smartconcept
+{% endif %}
 {% endblock %}
 
 
@@ -18,7 +22,7 @@
         <a class="nav-link font-weight-bold" href="/">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link font-weight-bold" href="#">Timesheet</a>
+        <a class="nav-link font-weight-bold" href="/timesheet/">Timesheet</a>
       </li>
     </ul>
     <ul class="navbar-nav">

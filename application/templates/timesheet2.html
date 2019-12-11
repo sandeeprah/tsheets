@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Bilfinger Timsheet App{% endblock title %}
+
+{% block meta_description %}
+{% endblock meta_description %}
+
+{% block meta_keywords %}
+{% endblock meta_keywords %}
+
+{% block styles %}
+{{super()}}
+<style type="text/css">
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input { border: none; }
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance
+}
+
+
+
+  </style>
+{% endblock %}
+
+{% block app_content %}
+<h1> Timesheet </h1>
+<p>
+  {{ user.username }} <br/>
+  {{project}}
+</p>
+
+<form action="/action_page.php">
+<!--
+<table class="table table-bordered table-striped">
+-->
+<table border=1>
+
+  <thead>
+    <tr>
+      <!--
+      <th class="w-10 p-0"scope="col">Day</th>
+      <th class="w-30 p-0 text-center"scope="col">Activity Description</th>
+      <th class="w-1 p-0 text-center"scope="col">XXX</th>
+      <th class="w-5 p-0 text-center"scope="col">XXX</th>
+      <th class="w-5 p-0 text-center"scope="col">XXX</th>
+      <th class="w-5 p-0 text-center"scope="col">XXX</th>
+      <th class="w-5 p-0 text-center"scope="col">XXX</th>
+      <th class="w-5 p-0 text-center"scope="col">XXX</th>
+      <th class="w-5 p-0 text-center"scope="col">XXX</th>
+      <th class="w-5 p-0 text-center"scope="col">XXX</th>
+      <th class="w-5 p-0 text-center"scope="col">XXX</th>
+      <th class="w-5 p-0 text-center"scope="col">XXX</th>
+      <th class="w-5 p-0 text-center"scope="col">XXX</th>
+      <th class="w-5 p-0 text-center"scope="col">XXX</th>
+-->
+
+
+ <!--
+      <th class="w-5 p-0 text-center"scope="col">WLA_Code</th>
+      <th class="w-5 p-0 text-center"scope="col">WLA_hrs</th>
+      <th class="w-5 p-0 text-center"scope="col">WLB_Code</th>
+      <th class="w-5 p-0 text-center"scope="col">WLB_hrs</th>
+      <th class="w-5 p-0 text-center"scope="col">MA_Code</th>
+      <th class="w-5 p-0 text-center"scope="col">MA-hrs</th>
+      <th class="w-5 p-0 text-center"scope="col">MB_Code</th>
+      <th class="w-5 p-0 text-center"scope="col">MB-hrs</th>
+      <th class="w-5 p-0 text-center"scope="col">L_Code</th>
+      <th class="w-5 p-0 text-center"scope="col">L-hrs</th>
+      <th class="w-5 p-0 text-center"scope="col">OT_Code</th>
+      <th class="w-5 p-0 text-center"scope="col">OT_hrs</th>
+
+
+      <tr>
+        <th class="p-0" scope="row">{{ day }}</th>
+        <td class="p-0" >Engineering Services</td>
+        <td ><input type="text" class="aform-control" min=0 max=24 step=0.5 size = 4 maxlength=4 id="textinput"></td>
+        <td class="p-0">10</td>
+        <td class="p-0">WL2</td>
+        <td class="p-0">10</td>
+        <td class="p-0">M1</td>
+        <td class="p-0">10</td>
+        <td class="p-0">M2</td>
+        <td class="p-0">10</td>
+        <td class="p-0">L</td>
+        <td class="p-0">10</td>
+        <td class="p-0">OT1</td>
+        <td class="p-0">10</td>
+      </tr>
+
+-->
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for day in days %}
+    <tr>
+      <th>{{ day }}</th>
+      <td>Engineering Services</td>
+      <td><input type="number" class="aform-control" min=0 max=24 step=0.5 size = 4 maxlength=4 id="textinput"></td>
+      <td><input type="number" class="aform-control" min=0 max=24 step=0.5 size = 4 maxlength=4 id="textinput"></td>
+      <td><input type="number" class="aform-control" min=0 max=24 step=0.5 size = 4 maxlength=4 id="textinput"></td>
+      <td><input type="number" class="aform-control" min=0 max=24 step=0.5 size = 4 maxlength=4 id="textinput"></td>
+      <td><input type="number" class="aform-control" min=0 max=24 step=0.5 size = 4 maxlength=4 id="textinput"></td>
+      <td><input type="number" class="aform-control" min=0 max=24 step=0.5 size = 4 maxlength=4 id="textinput"></td>
+      <td><input type="number" class="aform-control" min=0 max=24 step=0.5 size = 4 maxlength=4 id="textinput"></td>
+      <td><input type="number" class="aform-control" min=0 max=24 step=0.5 size = 4 maxlength=4 id="textinput"></td>
+      <td><input type="number" class="aform-control" min=0 max=24 step=0.5 size = 4 maxlength=4 id="textinput"></td>
+      <td><input type="number" class="aform-control" min=0 max=24 step=0.5 size = 4 maxlength=4 id="textinput"></td>
+      <td><input type="number" class="aform-control" min=0 max=24 step=0.5 size = 4 maxlength=4 id="textinput"></td>
+      <td><input type="number" class="aform-control" min=0 max=24 step=0.5 size = 4 maxlength=4 id="textinput"></td>
+      <td><input type="number" class="aform-control" min=0 max=24 step=0.5 size = 4 maxlength=4 id="textinput"></td>
+      <td><input type="number" class="aform-control" min=0 max=24 step=0.5 size = 4 maxlength=4 id="textinput"></td>
+    </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+ <button type="submit" class="btn btn-primary mb-2">Confirm identity</button>
+</form>
+
+{% endblock app_content %}
