@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Bilfinger Timsheet App{% endblock title %}
+
+{% block meta_description %}
+{% endblock meta_description %}
+
+{% block meta_keywords %}
+{% endblock meta_keywords %}
+
+{% block app_content %}
+		<h1>User Master Page</h1>
+		{% if items %}
+		<table class="table table-striped">
+			<tr>
+				<th>ID</th><th>username</th><th>employee_no</th><th>name</th><th>Action</th>
+			</tr>
+			{% for item in items %}
+			<tr>
+				<td>{{item.id}}</td><td>{{item.username}}</td><td>{{item.employee_no}}</td><td>{{item.name}}</td><td><a href="/detail-user/{{item.id}}/" class="btn btn-outline-primary">See Detail</a></td>
+			</tr>
+			{% endfor %}
+		</table>
+		{% endif %}
+		<a href="/add-user/" class="btn btn-outline-primary" role="button">Add User</a>
+{% endblock %}

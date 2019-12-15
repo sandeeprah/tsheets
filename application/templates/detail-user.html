@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+
+{% block app_content %}
+{%- if mode=='view' -%}
+  <h1>User Detail Page</h1>
+{%- elif mode=='add' -%}
+    <h1>User Add Page</h1>
+{%- elif mode=='edit' -%}
+  <h1>User Update Page</h1>
+{%- endif -%}
+
+
+
+<form class="form" method="post" role="form">
+    {%- if mode=='view' -%}
+      <fieldset disabled='disabled'>
+    {%- else -%}
+    <fieldset>
+    {%- endif -%}
+
+    {{ form.hidden_tag() }}
+
+    {%- if mode=='add' -%}
+    <br/>
+    {%- else -%}
+      {{ render_field(form.id, readonly=True)}}
+    {%- endif -%}
+
+    {{ render_field(form.username)}}
+    {{ render_field(form.name)}}
+    {{ render_field(form.employee_no)}}
+    {{ render_field(form.email)}}
+  </fieldset>
+
+  {% if mode=='view'%}
+    <a href="/edit-user/{{form.id.data}}/" class="btn btn-outline-primary" role="button">Edit</a>
+    <a href="/delete-user/{{form.id.data}}/" class="btn btn-outline-primary" role="button">Delete</a>
+  {% elif mode=='add' %}
+    <input type="submit" class="btn btn-outline-primary" value="Add"/>
+  {% elif mode=='edit' %}
+      <input type="submit" class="btn btn-outline-primary" value="Update"/>
+  {% endif %}
+  <a href="/master-user/" class="btn btn-outline-primary" role="button">Back</a>
+</form>
+
+{% if error %}
+  <p style='color:red;'>{{error}}</p>
+{% endif %}
+
+{% endblock %}

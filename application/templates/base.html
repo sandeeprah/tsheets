@@ -1,5 +1,10 @@
 {% extends 'bootstrap/base.html' %}
 
+{% block styles %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+{{super()}}
+{% endblock %}
+
 {% block title %}
 {% if title %}
   {{ title }}
@@ -8,21 +13,16 @@
 {% endif %}
 {% endblock %}
 
-
-
 {% block navbar %}
 <nav class="navbar navbar-expand-md navbar-dark bg-primary">
-  <a class="navbar-brand font-weight-bold" href="#">Bilfinger</a>
+  <a class="navbar-brand font-weight-bold" href="#">SmartConcept</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link font-weight-bold" href="/">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link font-weight-bold" href="/timesheet/">Timesheet</a>
+        <a class="nav-link font-weight-bold" href="/"><i class="fas fa-home fa-2x"></i> <span class="sr-only">(current)</span></a>
       </li>
     </ul>
     <ul class="navbar-nav">
@@ -39,7 +39,6 @@
         </div>
       </li>
       {% endif %}
-
     </ul>
   </div>
 </nav>
@@ -59,6 +58,88 @@
   {% endif %}
   {% endwith %}
   {# application content needs to be provided in the app_content block #}
+  {% macro form_group(field) -%}
+    <div class="form-group required">
+        <label for="{{ field.id }}" class="form-control-label">{{ field.label }}</label>
+        {% if field.errors %}
+            {{ field(class_="form-control is-invalid") }}
+        {% else %}
+            {{ field(class_="form-control") }}
+        {% endif %}
+        {% if field.errors %}
+            <div class="invalid-feedback">
+                {{ field.errors[0] }}
+            </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro quick_form(form) -%}
+    <form class="form" method="POST">
+    {% for field in form %}
+        {% if field.type in ('HiddenField', 'CSRFTokenField') %}
+            {{ field() }}
+        {% elif field.type == 'SubmitField' %}
+            {{ field(class_="btn btn-primary") }}
+        {% else %}
+            {{ form_group(field) }}
+        {% endif %}
+    {% endfor %}
+    </form>
+{% endmacro %}
+
   {% block app_content %}{% endblock %}
 </div>
 {% endblock %}
+
+
+{%- macro render_field(field) -%}
+      {%- if field.type =='BooleanField' -%}
+        <div class="form-check">
+          {{ field(class="form-check-input", type="checkbox")}}
+          {{ field.label }}
+        </div>
+      {% elif field.type == 'RadioField' %}
+      <div class="form-group required">
+        {{ field.label }}
+        {% for subfield in field %}
+        <div class="form-check">
+          {{ subfield(class="form-check-input", type="radio" )}}
+          {{ subfield.label }}
+        </div>
+        {% endfor %}
+        {% if field.errors %}
+            <div>
+                {% for error in field.errors %}
+                  <p style="color:red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+      </div>
+      {% elif field.type in ('IntegerField', 'FloatField', 'DecimalField', 'TextField', 'TextAreaField', 'DateField', 'FileField', 'SelectField') %}
+      <div class="form-group required">
+        {{field.label}}
+        {% if field.errors %}
+            {{ field(class="form-control is-invalid", **kwargs)|safe }}
+        {% else %}
+            {{ field(class="form-control", **kwargs)|safe }}
+        {% endif %}
+        {% if field.errors %}
+            <div class="invalid-feedback">
+                {% for error in field.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+      </div>
+      {%- else -%}
+        <div >
+          <p>
+            <span style="color:red">
+              Field Not Rendered
+            </span>
+          </p>
+        </div>
+      {% endif %}
+
+{% endmacro %}
