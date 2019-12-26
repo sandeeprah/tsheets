@@ -116,7 +116,7 @@
             </div>
         {% endif %}
       </div>
-      {% elif field.type in ('IntegerField', 'FloatField', 'DecimalField', 'TextField', 'TextAreaField', 'DateField', 'FileField', 'SelectField') %}
+      {% elif field.type in ('IntegerField', 'FloatField', 'DecimalField', 'TextField', 'TextAreaField', 'PasswordField', 'DateField', 'FileField', 'SelectField', 'QuerySelectField') %}
       <div class="form-group required">
         {{field.label}}
         {% if field.errors %}
@@ -136,6 +136,7 @@
         <div >
           <p>
             <span style="color:red">
+              {% print(field.type) %}
               Field Not Rendered
             </span>
           </p>

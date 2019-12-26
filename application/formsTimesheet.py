@@ -2,19 +2,28 @@ from flask_wtf import FlaskForm
 from wtforms import Form
 from wtforms.fields import *
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
+from flask_login import current_user
+
+#from application.modelsTimesheet import Project, TshtSetting, Assignment
+from application.modelsTimesheet import TshtSetting
+
 
 class ProjectForm(FlaskForm):
     id = IntegerField('ID')
     number = TextField('Project Number',validators=[DataRequired()])
     name = TextField('Project Name',validators=[DataRequired()])
-    tsht = TextField('Time Sheet Format',validators=[DataRequired()])
+    tsht = SelectField('Time Sheet Format',coerce=int)
+
 
 class AssignmentForm(FlaskForm):
     id = IntegerField('ID')
-    project_id = TextField('Project ID',validators=[DataRequired()])
-    user_id = TextField('User ID',validators=[DataRequired()])
+    #tsht = SelectField('Time Sheet Format',coerce=int)
+
+    project_id = SelectField('Project ID',validators=[DataRequired()], coerce=int)
+    user_id = SelectField('User ID',validators=[DataRequired()], coerce=int)
     rate = DecimalField('Contracted Rate',validators=[DataRequired()])
-    currency = TextField('Currency Rate',validators=[DataRequired()])
+    currency = TextField('Currency',validators=[DataRequired()])
     rate_basis = TextField('Rate Basis',validators=[DataRequired()])
 
 

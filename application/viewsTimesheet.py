@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from application import app, db
 from application.formsTimesheet import ProjectForm, TshtSettingsForm, AssignmentForm
 from application.modelsTimesheet import Project, TshtSetting, Assignment
-
+from application.models import User
 
 @app.route('/master-project/')
 def masterProject():
@@ -17,23 +17,42 @@ def detailProject(id):
     try:
         q = Project.query.filter_by(id=id).first_or_404()
         form = ProjectForm(obj=q)
+        choices = TshtSetting.query.with_entities(TshtSetting.id, TshtSetting.identifier).all()
+        form.tsht.choices = choices
+        if request.method == 'POST':
+            form.tsht.data = int(form.tsht.data)
+
     except Exception as e:
         error = e
     return render_template('timesheet/detail-project.html', form=form, error=error, mode='view')
+
+
+def getFormatChoices(current_user):
+    if current_user.is_authenticated:
+        print('congratulations the user is uthenticated')
+    else:
+        print('you do not deserve any choices')
+
+    choices = TshtSetting.query.with_entities(TshtSetting.id, TshtSetting.identifier).all()
+    return choices
 
 @app.route('/add-project/', methods=['GET', 'POST'])
 def addProject():
     error = None
     form = ProjectForm()
+    form.tsht.choices = getFormatChoices(current_user)
+
     if form.validate_on_submit():
         try:
             i = Project()
             form.populate_obj(i)
+            print(i.id, i.name, i.tsht)
             db.session.add(i)
             db.session.commit()
             flash('Project added successfully')
             return redirect(url_for('masterProject'))
         except Exception as e:
+            db.session.rollback()
             error = e
     return render_template('timesheet/detail-project.html', form=form, error=error, mode='add')
 
@@ -42,6 +61,11 @@ def editProject(id):
     error = None
     q = Project.query.filter_by(id=id).first_or_404()
     form = ProjectForm(obj=q)
+    choices = TshtSetting.query.with_entities(TshtSetting.id, TshtSetting.identifier).all()
+    form.tsht.choices = choices
+    if request.method == 'POST':
+        form.tsht.data = int(form.tsht.data)
+
     if form.validate_on_submit():
         try:
             form.populate_obj(q)
@@ -129,8 +153,18 @@ def deleteTshtSettings(id):
 
 @app.route('/master-assignment/')
 def masterAssignment():
-    q = Assignment.query.all()
+    q = Assignment.query.join(Project).order_by(Project.number)
     return render_template('timesheet/master-assignment.html', items=q)
+
+
+def getProjectChoices():
+    choices = Project.query.with_entities(Project.id, Project.name).all()
+    return choices
+
+def getUserChoices():
+    choices = User.query.with_entities(User.id, User.employee_no).all()
+    return choices
+
 
 @app.route('/detail-assignment/<int:id>/', methods=['GET', 'POST'])
 def detailAssignment(id):
@@ -138,6 +172,8 @@ def detailAssignment(id):
     try:
         q = Assignment.query.filter_by(id=id).first_or_404()
         form = AssignmentForm(obj=q)
+        form.project_id.choices = getProjectChoices()
+        form.user_id.choices = getUserChoices()
     except Exception as e:
         error = e
     return render_template('timesheet/detail-assignment.html', form=form, error=error, mode='view')
@@ -146,6 +182,8 @@ def detailAssignment(id):
 def addAssignment():
     error = None
     form = AssignmentForm()
+    form.project_id.choices = getProjectChoices()
+    form.user_id.choices = getUserChoices()
     if form.validate_on_submit():
         try:
             i = Assignment()
@@ -163,6 +201,8 @@ def editAssignment(id):
     error = None
     q = Assignment.query.filter_by(id=id).first_or_404()
     form = AssignmentForm(obj=q)
+    form.project_id.choices = getProjectChoices()
+    form.user_id.choices = getUserChoices()
     if form.validate_on_submit():
         try:
             form.populate_obj(q)
@@ -185,3 +225,20 @@ def deleteAssignment(id):
         except Exception as e:
             error = e
     return render_template('timesheet/master-assignment.html', error=error)
+
+
+
+@app.route('/prjselect-timesheet/', methods=['GET', 'POST'])
+def prjSelectTimesheet():
+    error = None
+    q = Assignment.query.filter_by(id=id).first_or_404()
+    form = ProjectSelectForm(obj=q)
+    form.project_id.choices = getProjectChoices()
+    if form.validate_on_submit():
+        try:
+            form.populate_obj(q)
+            db.session.commit()
+            flash('Assignment updated successfully')
+        except Exception as e:
+            error = e
+    return render_template('timesheet/detail-assignment.html', form=form, error=error, mode='edit')

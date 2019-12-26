@@ -31,6 +31,13 @@
     {{ render_field(form.name)}}
     {{ render_field(form.employee_no)}}
     {{ render_field(form.email)}}
+
+    {%- if mode=='add' -%}
+      {{ render_field(form.password)}}
+      {{ render_field(form.password2)}}
+    {%- endif -%}
+
+
   </fieldset>
 
   {% if mode=='view'%}

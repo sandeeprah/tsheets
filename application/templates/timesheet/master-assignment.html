@@ -13,11 +13,11 @@
 		{% if items %}
 		<table class="table table-striped">
 			<tr>
-				<th>ID</th><th>Number</th><th>Name</th><th>Action</th>
+				<th>Project Number</th><th>Project Name</th><th>Employee No</th><th>Employee Name</th><th>Action</th>
 			</tr>
 			{% for item in items %}
 			<tr>
-				<td>{{item.id}}</td><td>{{item.project_id}}</td><td>{{item.user_id}}</td><td><a href="/detail-assignment/{{item.id}}/" class="btn btn-outline-primary">See Detail</a>
+				<td>{{item.project.number}}</td><td>{{item.project.name}}</td><td>{{item.user.employee_no}}<td>{{item.user.name}}</td><td><a href="/detail-assignment/{{item.id}}/" class="btn btn-outline-primary">See Detail</a>
 				</td>
 			</tr>
 			{% endfor %}

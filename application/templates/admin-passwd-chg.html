@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+
+<h1>Change User Password</h1>
+
+<form class="form" method="post" role="form">
+    {{ form.hidden_tag() }}
+    {{ render_field(form.user_id)}}
+    {{ render_field(form.password)}}
+    {{ render_field(form.password2)}}
+    <input type="submit" class="btn btn-outline-primary" value="Update"/>
+    <a href="/master-user/" class="btn btn-outline-primary" role="button">Back</a>
+</form>
+
+{% if error %}
+  <p style='color:red;'>{{error}}</p>
+{% endif %}
+
+{% endblock %}

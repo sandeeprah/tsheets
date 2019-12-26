@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<head>
+  <style type="text/css">
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input {
+      border: none;
+      padding: 5px;
+    }
+
+    /* Firefox */
+    input[type=number] {
+      -moz-appearance
+    }
+
+
+    th.rotate {
+  /* Something you can count on */
+  height: 12em;
+  white-space: nowrap;
+}
+
+th.rotate > div {
+  transform:
+    /* Magic Numbers */
+  /*  translate(25px, 51px)*/
+    translate(15px, 75px)
+
+    /* 45 is really 360 - 45 */
+    rotate(270deg);
+  width: 30px;
+}
+th.rotate > div > span {
+  /*border-bottom: 1px solid #ccc; */
+  padding: 5px 10px;
+}
+
+  </style>
+</head>
+
+<body>
+  <h1> Timesheet : {{ user.username }}</h1>
+  {{settings.wldbl}}
+  <form action="/action_page.php">
+    <table border=1 cellspacing=0 cellpadding=0>
+      <thead>
+        <th class ="rotate"><div><span> Day</span></div></th>
+        <th class ="rotate"><div><span> Activity</span></div></th>
+
+        {% if settings.wla %}
+        <th class ="rotate"><div><span> Work Location A Code</span></div></th>
+        <th class ="rotate"><div><span> Work Location A Hours</span></div></th>
+        {% endif %}
+
+        {% if settings.wlb %}
+        <th class ="rotate"><div><span> Work Location B Code</span></div></th>
+        <th class ="rotate"><div><span> Work Location B Hours</span></div></th>
+        {% endif %}
+
+        {% if settings.lv %}
+        <th class ="rotate"><div><span> Leave/Off Code</span></div></th>
+        <th class ="rotate"><div><span> Leave/Off Hours</span></div></th>
+        {% endif %}
+
+        {% if settings.tra %}
+        <th class ="rotate"><div><span> Travel A Code</span></div></th>
+        <th class ="rotate"><div><span> Travel A Hours</span></div></th>
+        {% endif %}
+
+        {% if settings.trb %}
+        <th class ="rotate"><div><span> Travel B Code </span></div></th>
+        <th class ="rotate"><div><span> Travel B Hours</span></div></th>
+        {% endif %}
+
+        {% if settings.ot %}
+        <th class ="rotate"><div><span> Over Time Code</span></div></th>
+        <th class ="rotate"><div><span> Over Time Hours</span></div></th>
+        {% endif %}
+
+      </thead>
+      <tbody>
+        {% for day in days %}
+        <tr>
+          <td style="padding-left: 25px; padding-right: 25px;">{{ day }}</td>
+          <td><input type="text" size=30 maxlength=30 /> </td>
+
+          {% if settings.wla %}
+          <td><input list="WLC" size=4 /></td>
+          <td><input type="number" min=0 max=24 step=0.5 pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==4) return false;" id="textinput" /></td>
+          {% endif %}
+
+          {% if settings.wlb %}
+          <td><input list="WLC" size=4 /></td>
+          <td><input type="number" min=0 max=24 step=0.5 pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==4) return false;" id="textinput" /></td>
+          {% endif %}
+
+          {% if settings.lv %}
+          <td><input list="LVC" size=4 /></td>
+          <td><input type="number" min=0 max=24 step=0.5 pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==4) return false;" id="textinput" /></td>
+          {% endif %}
+
+          {% if settings.tra %}
+          <td><input list="TRC" size=4 /></td>
+          <td><input type="number" min=0 max=24 step=0.5 pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==4) return false;" id="textinput" /></td>
+          {% endif %}
+
+          {% if settings.trb %}
+          <td><input list="TRC" size=4 /></td>
+          <td><input type="number" min=0 max=24 step=0.5 pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==4) return false;" id="textinput" /></td>
+          {% endif %}
+
+          {% if settings.ot %}
+          <td><input list="OTC" size=4 /></td>
+          <td><input type="number" min=0 max=24 step=0.5 pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==4) return false;" id="textinput" /></td>
+          {% endif %}
+
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary mb-2">Confirm identity</button>
+
+    <datalist id="WLC">
+      <option value="WL1">
+      <option value="WL2">
+      <option value="WL3">
+    </datalist>
+    <datalist id="LVC">
+      <option value="WOF">
+      <option value="HLD">
+      <option value="LEV">
+    </datalist>
+    <datalist id="TRC">
+      <option value="T1">
+      <option value="T2">
+      <option value="T3">
+    </datalist>
+    <datalist id="OTC">
+      <option value="OT1">
+      <option value="OT2">
+      <option value="OT3">
+    </datalist>
+
+  </form>
+
+
+</body>

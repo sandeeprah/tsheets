@@ -5,13 +5,14 @@ from datetime import datetime
 from wtforms import StringField, PasswordField, BooleanField, TextAreaField, SubmitField
 
 from application import app, db
-from application.forms import LoginForm, RegistrationForm, EditProfileForm, ItemForm, QueryForm, UserForm
+from application.forms import LoginForm, RegistrationForm, EditProfileForm, ItemForm, QueryForm, UserAddForm, UserEditForm, AdminPasswdChgForm
 from application.models import User, Item
 
 import application.viewsTimesheet
 
 @app.route('/')
 @app.route('/index/')
+@login_required
 def index():
     return render_template("index.html")
 
@@ -95,7 +96,7 @@ def detailUser(id):
     error=None
     try:
         q = User.query.filter_by(id=id).first_or_404()
-        form = UserForm(obj=q)
+        form = UserEditForm(obj=q)
     except Exception as e:
         error = e
     return render_template('detail-user.html', form=form, error=error, mode='view')
@@ -103,16 +104,18 @@ def detailUser(id):
 @app.route('/add-user/', methods=['GET', 'POST'])
 def addUser():
     error = None
-    form = UserForm()
+    form = UserAddForm()
     if form.validate_on_submit():
         try:
-            i = User()
-            form.populate_obj(i)
-            db.session.add(i)
+            user = User()
+            form.populate_obj(user)
+            user.set_password(form.password.data)
+            db.session.add(user)
             db.session.commit()
             flash('User added successfully')
             return redirect(url_for('masterUser'))
         except Exception as e:
+            db.session.rollback()
             error = e
     return render_template('detail-user.html', form=form, error=error, mode='add')
 
@@ -120,14 +123,16 @@ def addUser():
 def editUser(id):
     error = None
     q = User.query.filter_by(id=id).first_or_404()
-    form = UserForm(obj=q)
+    form = UserEditForm(obj=q)
     if form.validate_on_submit():
         try:
             form.populate_obj(q)
             db.session.commit()
             flash('User updated successfully')
         except Exception as e:
+            db.session.rollback()
             error = e
+
     return render_template('detail-user.html', form=form, error=error, mode='edit')
 
 
@@ -142,8 +147,29 @@ def deleteUser(id):
             flash("User deleted successfully")
             return redirect(url_for('masterUser'))
         except Exception as e:
+            db.session.rollback()
             error = e
     return render_template('master-user.html', error=error)
+
+@app.route('/admin-passwd-chg/', methods=['GET', 'POST'])
+def adminPasswdChg():
+    error = None
+    form = AdminPasswdChgForm()
+    choices = User.query.with_entities(User.id, User.employee_no).all()
+    form.user_id.choices = choices
+
+    if form.validate_on_submit():
+        try:
+            user = User.query.filter_by(id=form.user_id.data).first()
+            user.set_password(form.password.data)
+            db.session.commit()
+            flash('User Password updated successfully')
+        except Exception as e:
+            db.session.rollback()
+            error = e
+
+    return render_template('admin-passwd-chg.html', form=form, error=error)
+
 
 
 @app.route('/master-item/')
@@ -186,6 +212,7 @@ def addItem():
             flash('Item added successfully')
             return redirect(url_for('masterItem'))
         except Exception as e:
+            db.session.rollback()
             error = e
     return render_template('detail-item.html', form=form, error=error, mode='add')
 
@@ -200,6 +227,7 @@ def editItem(id):
             db.session.commit()
             flash('Item updated successfully')
         except Exception as e:
+            db.session.rollback()
             error = e
     return render_template('detail-item.html', form=form, error=error, mode='edit')
 
@@ -214,6 +242,7 @@ def deleteItem(id):
             flash("Item deleted successfully")
             return redirect(url_for('masterItem'))
         except Exception as e:
+            db.session.rollback()
             error = e
     return render_template('master-item.html', error=error)
 

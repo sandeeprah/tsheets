@@ -9,60 +9,45 @@
 {% endblock meta_keywords %}
 
 {% block app_content %}
-<h1>{{current_user.username }}</h1>
+
+<p>{{ current_user.username }}</p>
+{% if current_user.username == 'admin'%}
+<div class="row my-2">
+  <div class="col-lg-3"></div>
+  <div class="col-lg-6">
+    <a href="/master-user/" class="btn btn-secondary btn-block"> Manage Users</a>
+  </div>
+  <div class="col-lg-3"></div>
+</div>
+<div class="row my-2">
+  <div class="col-lg-3"></div>
+  <div class="col-lg-6">
+    <a href="/master-project/" class="btn btn-secondary btn-block"> Manage Projects</a>
+  </div>
+  <div class="col-lg-3"></div>
+</div>
+<div class="row my-2">
+  <div class="col-lg-3"></div>
+  <div class="col-lg-6">
+    <a href="/master-tshtsetting/" class="btn btn-secondary btn-block"> Manage Time Sheet Formats</a>
+  </div>
+  <div class="col-lg-3"></div>
+</div>
+<div class="row my-2">
+  <div class="col-lg-3"></div>
+  <div class="col-lg-6">
+    <a href="/master-assignment/" class="btn btn-secondary btn-block"> Manage Assignments</a>
+  </div>
+  <div class="col-lg-3"></div>
+</div>
+{% endif %}
 
 <div class="row my-2">
   <div class="col-lg-3"></div>
   <div class="col-lg-6">
-    <div class="card ">
-      <div class="p-1 my-1 card-body "">
-        <div class="bg-secondary text-white p-100">
-          <a href="/master-user/" class="btn btn-secondary stretched-link"> Manage Users</a>
-        </div>
-        </div>
-    </div>
+    <a href="/prjselect-timesheet/" class="btn btn-secondary btn-block"> Fill Timesheet </a>
   </div>
   <div class="col-lg-3"></div>
 </div>
-<div class="row my-2">
-  <div class="col-lg-3"></div>
-  <div class="col-lg-6">
-    <div class="card ">
-      <div class="p-1 my-1 card-body "">
-        <div class="bg-secondary text-white p-100">
-          <a href="/master-project/" class="btn btn-secondary stretched-link"> Manage Projects</a>
-        </div>
-        </div>
-    </div>
-  </div>
-  <div class="col-lg-3"></div>
-</div>
-<div class="row my-2">
-  <div class="col-lg-3"></div>
-  <div class="col-lg-6">
-    <div class="card ">
-      <div class="p-1 my-1 card-body "">
-        <div class="bg-secondary text-white p-100">
-          <a href="/master-tshtsetting/" class="btn btn-secondary stretched-link"> Manage Timesheet Formats</a>
-        </div>
-        </div>
-    </div>
-  </div>
-  <div class="col-lg-3"></div>
-</div>
-<div class="row my-2">
-  <div class="col-lg-3"></div>
-  <div class="col-lg-6">
-    <div class="card ">
-      <div class="p-1 my-1 card-body "">
-        <div class="bg-secondary text-white p-100">
-          <a href="/master-assignment/" class="btn btn-secondary stretched-link"> Manage Assignments</a>
-        </div>
-        </div>
-    </div>
-  </div>
-  <div class="col-lg-3"></div>
-</div>
-
 
 {% endblock app_content %}

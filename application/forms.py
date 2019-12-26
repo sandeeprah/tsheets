@@ -3,7 +3,7 @@ from wtforms import Form
 from wtforms.fields import *
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 from collections import OrderedDict
-from wtforms_alchemy import ModelForm
+#from wtforms_alchemy import ModelForm
 from application.models import User
 
 class LoginForm(FlaskForm):
@@ -16,8 +16,7 @@ class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField(
-        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
 
     def validate_username(self, username):
@@ -29,6 +28,7 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Please use a different email address.')
+
 
 class EditProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -51,13 +51,46 @@ class BaseForm(FlaskForm):
         return super(BaseForm, self).__iter__()
 '''
 
+class Unique(object):
+    """ validator that checks field uniqueness """
+    def __init__(self, model, field, message=None):
+        self.model = model
+        self.field = field
+        if not message:
+            message = u'already exists, must be unique'
+        self.message = message
 
-class UserForm(FlaskForm):
+    def __call__(self, form, field):
+        check = self.model.query.filter(self.field == field.data).first()
+        if 'id' in form:
+            id = form.id.data
+        else:
+            id = None
+
+        if check and (id is None or id != check.id):
+            raise ValidationError(self.message)
+
+class UserAddForm(FlaskForm):
     id = IntegerField('ID')
-    username = TextField('User Name',validators=[DataRequired()])
+    username = TextField('User Name',validators=[DataRequired(), Unique(User, User.username)])
     name = TextField('Full Name',validators=[DataRequired()])
-    employee_no = TextField('Employee No.',validators=[DataRequired()])
-    email = TextField('Email',validators=[DataRequired()])
+    employee_no = TextField('Employee No.',validators=[DataRequired(), Unique(User, User.employee_no)])
+    email = TextField('Email',validators=[DataRequired(), Unique(User, User.email)])
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
+
+
+class UserEditForm(FlaskForm):
+    id = IntegerField('ID')
+    username = TextField('User Name',validators=[DataRequired(), Unique(User, User.username)])
+    name = TextField('Full Name',validators=[DataRequired()])
+    employee_no = TextField('Employee No.',validators=[DataRequired(), Unique(User, User.employee_no)])
+    email = TextField('Email',validators=[DataRequired(), Unique(User, User.email)])
+
+class AdminPasswdChgForm(FlaskForm):
+    user_id = SelectField('Employee No',coerce=int)
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
 
 
 class QueryForm(FlaskForm):

@@ -1,24 +1,27 @@
 from application import db
+from application.models import User
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    number = db.Column(db.String(20),nullable=False)
+    number = db.Column(db.String(120),nullable=False)
     name = db.Column(db.String(120))
-    tsht = db.Column(db.String(120))
+    tsht = db.Column(db.Integer, db.ForeignKey('tsht_setting.id'), nullable=False)
 
     def __repr__(self):
         return '<Project {}>'.format(self.name)
 
 class Assignment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    project_id = db.Column(db.String(20),nullable=False)
-    user_id = db.Column(db.String(20),nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'),nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
+    project = db.relationship(Project, backref='assignments')
+    user = db.relationship(User, backref='assignments')
     rate  = db.Column(db.Float(),nullable=False)
     currency  = db.Column(db.String(10),nullable=False)
     rate_basis  = db.Column(db.String(10),nullable=False)
 
     def __repr__(self):
-        return '<Assignment -ID - {},  Project {},  Employee {}>'.format(self.id, self.project_no, self.employee_no )
+        return '<Assignment -ID - {}>'.format(self.id)
 
 
 class TshtSetting(db.Model):
@@ -56,5 +59,7 @@ class TshtSetting(db.Model):
     remarks_enable = db.Column(db.Boolean())
     remarks_title = db.Column(db.String(50))
 
-    def __repr__(self):
-        return '<TshtSetting {}>'.format(self.identifier)
+
+
+    def __str__(self):
+        return self.description
